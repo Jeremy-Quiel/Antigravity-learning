@@ -1,180 +1,227 @@
 from typing import List, Optional
 
 
-class Node:
-    """Represent one node in a binary search tree.
+class Knoten:
+    """Repräsentiert einen einzelnen Knoten in einem binären Suchbaum.
 
-    Each node stores an integer and references to its left and right children.
-    A missing child is represented by ``None``.
+    Jeder Knoten speichert einen ganzzahligen Wert sowie Verweise auf sein
+    linkes und rechtes Kind. Ein fehlendes Kind wird durch ``None`` dargestellt.
     """
 
-    def __init__(self, value: int):
-        self.value: int = value
-        self.left: Optional["Node"] = None
-        self.right: Optional["Node"] = None
+    def __init__(self, wert: int):
+        """Initialisiert einen Knoten mit einem ganzzahligen Wert.
+
+        :param wert: Der zu speichernde ganzzahlige Wert.
+        """
+        self.wert: int = wert
+        self.links: Optional["Knoten"] = None
+        self.rechts: Optional["Knoten"] = None
 
     def __repr__(self) -> str:
-        """Return a concise representation containing the node's value."""
-        return f"Node({self.value})"
+        """Gibt eine lesbare Zeichenkettendarstellung des Knotens zurück."""
+        return f"Knoten({self.wert})"
 
 
-class BinarySearchTree:
-    """Implement a binary search tree (BST) containing integer values."""
+class BinaererSuchbaum:
+    """Implementierung eines binären Suchbaums für ganzzahlige Werte."""
 
     def __init__(self):
-        """Create an empty tree with no root node."""
-        self.root: Optional[Node] = None
+        """Erstellt einen leeren binären Suchbaum ohne Wurzelknoten."""
+        self.wurzel: Optional[Knoten] = None
 
     # =========================================================================
-    # INSERTION
+    # EINFÜGEN
     # =========================================================================
-    def insert(self, value: int) -> None:
-        """Insert an integer value into the tree if it is not already present."""
-        if not isinstance(value, int):
-            raise TypeError("The value must be an integer.")
+    def einfuegen(self, wert: int) -> None:
+        """Fügt einen neuen ganzzahligen Wert in den Baum ein.
 
-        if self.root is None:
-            self.root = Node(value)
-        else:
-            self._insert_recursive(self.root, value)
+        Falls der Wert bereits existiert, wird er nicht erneut eingefügt.
+        :param wert: Der einzufügende ganzzahlige Wert.
+        :raises TypeError: Wenn der Wert keine ganze Zahl ist.
+        """
+        if not isinstance(wert, int):
+            raise TypeError("Der Wert muss eine ganze Zahl sein.")
 
-    def _insert_recursive(self, current: Node, value: int) -> None:
-        """Place a value recursively according to the BST ordering rule."""
-        if value < current.value:
-            if current.left is None:
-                current.left = Node(value)
-            else:
-                self._insert_recursive(current.left, value)
-        elif value > current.value:
-            if current.right is None:
-                current.right = Node(value)
-            else:
-                self._insert_recursive(current.right, value)
+        if self.wurzel is None:
+            self.wurzel = Knoten(wert)
         else:
-            # Existing values are ignored so the tree never contains duplicates.
+            self._einfuegen_rekursiv(self.wurzel, wert)
+
+    def _einfuegen_rekursiv(self, aktuell: Knoten, wert: int) -> None:
+        """Platziert einen Wert rekursiv gemäß den Regeln des binären Suchbaums.
+
+        :param aktuell: Der aktuell betrachtete Knoten.
+        :param wert: Der einzufügende Wert.
+        """
+        if wert < aktuell.wert:
+            # Kleinere Werte gehören in den linken Teilbaum
+            if aktuell.links is None:
+                aktuell.links = Knoten(wert)
+            else:
+                self._einfuegen_rekursiv(aktuell.links, wert)
+        elif wert > aktuell.wert:
+            # Größere Werte gehören in den rechten Teilbaum
+            if aktuell.rechts is None:
+                aktuell.rechts = Knoten(wert)
+            else:
+                self._einfuegen_rekursiv(aktuell.rechts, wert)
+        else:
+            # Duplikate werden ignoriert, um eindeutige Werte beizubehalten
             pass
 
     # =========================================================================
-    # SEARCH
+    # SUCHEN
     # =========================================================================
-    def search(self, value: int) -> Optional[Node]:
+    def suchen(self, wert: int) -> Optional[Knoten]:
+        """Sucht nach einem Wert und gibt den Knoten zurück oder ``None``.
+
+        :param wert: Der gesuchte ganzzahlige Wert.
+        :return: Der gefundene Knoten oder None.
+        :raises TypeError: Wenn der gesuchte Wert keine ganze Zahl ist.
         """
-        Search for a value and return its node, or ``None`` when it is absent.
+        if not isinstance(wert, int):
+            raise TypeError("Der zu suchende Wert muss eine ganze Zahl sein.")
+        return self._suchen_rekursiv(self.wurzel, wert)
+
+    def _suchen_rekursiv(self, aktuell: Optional[Knoten], wert: int) -> Optional[Knoten]:
+        """Durchsucht den Baum rekursiv durch Ausschluss des unzutreffenden Teilbaums.
+
+        :param aktuell: Der aktuell untersuchte Knoten.
+        :param wert: Der gesuchte Wert.
+        :return: Der passende Knoten oder None.
         """
-        if not isinstance(value, int):
-            raise TypeError("The value to search for must be an integer.")
-        return self._search_recursive(self.root, value)
+        if aktuell is None or aktuell.wert == wert:
+            return aktuell
 
-    def _search_recursive(self, current: Optional[Node], value: int) -> Optional[Node]:
-        """Search recursively by discarding the half that cannot contain value."""
-        if current is None or current.value == value:
-            return current
+        if wert < aktuell.wert:
+            return self._suchen_rekursiv(aktuell.links, wert)
+        return self._suchen_rekursiv(aktuell.rechts, wert)
 
-        if value < current.value:
-            return self._search_recursive(current.left, value)
-        return self._search_recursive(current.right, value)
+    def enthaelt(self, wert: int) -> bool:
+        """Prüft, ob ein Wert im Baum vorhanden ist.
 
-    def contains(self, value: int) -> bool:
-        """Return ``True`` when value exists in the tree; otherwise return ``False``."""
-        return self.search(value) is not None
+        :param wert: Der zu überprüfende Wert.
+        :return: True, wenn der Wert vorhanden ist, andernfalls False.
+        """
+        return self.suchen(wert) is not None
 
     # =========================================================================
-    # DELETION
+    # LÖSCHEN
     # =========================================================================
-    def delete(self, value: int) -> None:
-        """Remove an integer value from the tree when it is present."""
-        if not isinstance(value, int):
-            raise TypeError("The value to delete must be an integer.")
-        self.root = self._delete_recursive(self.root, value)
+    def loeschen(self, wert: int) -> None:
+        """Entfernt einen ganzzahligen Wert aus dem Baum, falls vorhanden.
 
-    def _delete_recursive(self, current: Optional[Node], value: int) -> Optional[Node]:
-        """Delete value recursively and return the subtree's updated root."""
-        if current is None:
+        :param wert: Der zu entfernende ganzzahlige Wert.
+        :raises TypeError: Wenn der zu löschende Wert keine ganze Zahl ist.
+        """
+        if not isinstance(wert, int):
+            raise TypeError("Der zu löschende Wert muss eine ganze Zahl sein.")
+        self.wurzel = self._loeschen_rekursiv(self.wurzel, wert)
+
+    def _loeschen_rekursiv(self, aktuell: Optional[Knoten], wert: int) -> Optional[Knoten]:
+        """Löscht einen Wert rekursiv und aktualisiert die Baumstruktur.
+
+        :param aktuell: Der Wurzelknoten des aktuellen Teilbaums.
+        :param wert: Der zu löschende Wert.
+        :return: Der neue Wurzelknoten des Teilbaums nach dem Löschvorgang.
+        """
+        if aktuell is None:
             return None
 
-        # Navigate toward the value using the BST ordering property.
-        if value < current.value:
-            current.left = self._delete_recursive(current.left, value)
-        elif value > current.value:
-            current.right = self._delete_recursive(current.right, value)
+        # Navigation zum Zielknoten anhand der Suchbaumeigenschaft
+        if wert < aktuell.wert:
+            aktuell.links = self._loeschen_rekursiv(aktuell.links, wert)
+        elif wert > aktuell.wert:
+            aktuell.rechts = self._loeschen_rekursiv(aktuell.rechts, wert)
         else:
-            # The node to delete has been found.
+            # Der zu löschende Knoten wurde gefunden
 
-            # Case 1: the node is a leaf with no children.
-            if current.left is None and current.right is None:
+            # Fall 1: Knoten hat keine Kinder (Blattknoten)
+            if aktuell.links is None and aktuell.rechts is None:
                 return None
 
-            # Case 2: the node has exactly one child.
-            if current.left is None:
-                return current.right
-            elif current.right is None:
-                return current.left
+            # Fall 2: Knoten hat genau ein Kind
+            if aktuell.links is None:
+                return aktuell.rechts
+            elif aktuell.rechts is None:
+                return aktuell.links
 
-            # Case 3: replace a node with two children by its in-order successor.
-            successor = self._get_minimum(current.right)
-            current.value = successor.value
-            # Remove the successor from the right subtree after copying its value.
-            current.right = self._delete_recursive(current.right, successor.value)
+            # Fall 3: Knoten hat zwei Kinder
+            # Finde den Inorder-Nachfolger (kleinster Knoten im rechten Teilbaum)
+            nachfolger = self._minimum_ermitteln(aktuell.rechts)
+            aktuell.wert = nachfolger.wert
+            # Lösche den Nachfolger-Knoten aus dem rechten Teilbaum
+            aktuell.rechts = self._loeschen_rekursiv(aktuell.rechts, nachfolger.wert)
 
-        return current
+        return aktuell
 
-    def _get_minimum(self, node: Node) -> Node:
-        """Return the node with the smallest value in a subtree."""
-        current = node
-        while current.left is not None:
-            current = current.left
-        return current
+    def _minimum_ermitteln(self, knoten: Knoten) -> Knoten:
+        """Ermittelt den Knoten mit dem kleinsten Wert in einem Teilbaum.
+
+        :param knoten: Der Startknoten für die Suche nach dem Minimum.
+        :return: Der Knoten mit dem kleinsten Wert.
+        """
+        aktuell = knoten
+        while aktuell.links is not None:
+            aktuell = aktuell.links
+        return aktuell
 
     # =========================================================================
-    # IN-ORDER TRAVERSAL
+    # INORDER-TRAVERSIERUNG
     # =========================================================================
     def inorder(self) -> List[int]:
-        """Return all tree values in ascending order."""
-        elements: List[int] = []
-        self._inorder_recursive(self.root, elements)
-        return elements
+        """Gibt alle Werte des Baums in aufsteigender Reihenfolge zurück.
 
-    def _inorder_recursive(
-        self, current: Optional[Node], elements: List[int]
+        :return: Liste aller ganzzahligen Werte sortiert.
+        """
+        elemente: List[int] = []
+        self._inorder_rekursiv(self.wurzel, elemente)
+        return elemente
+
+    def _inorder_rekursiv(
+        self, aktuell: Optional[Knoten], elemente: List[int]
     ) -> None:
-        """Append values recursively in left-node-right order."""
-        if current is not None:
-            self._inorder_recursive(current.left, elements)
-            elements.append(current.value)
-            self._inorder_recursive(current.right, elements)
+        """Fügt Werte rekursiv in der Reihenfolge Links-Wurzel-Rechts hinzu.
+
+        :param aktuell: Der aktuell besuchte Knoten.
+        :param elemente: Die Zielliste für die sortierten Werte.
+        """
+        if aktuell is not None:
+            self._inorder_rekursiv(aktuell.links, elemente)
+            elemente.append(aktuell.wert)
+            self._inorder_rekursiv(aktuell.rechts, elemente)
 
 
 # =============================================================================
-# EJEMPLO DE USO Y PRUEBAS
+# ANWENDUNGSBEISPIEL UND TESTS
 # =============================================================================
 if __name__ == "__main__":
-    tree = BinarySearchTree()
+    baum = BinaererSuchbaum()
 
-    print("=== Inserting values ===")
-    values = [50, 30, 70, 20, 40, 60, 80]
-    for value in values:
-        tree.insert(value)
-    print(f"Inserted values: {values}")
-    print(f"In-order traversal (sorted): {tree.inorder()}")
+    print("=== Werte einfügen ===")
+    werte = [50, 30, 70, 20, 40, 60, 80]
+    for wert in werte:
+        baum.einfuegen(wert)
+    print(f"Eingefügte Werte: {werte}")
+    print(f"Inorder-Traversierung (sortiert): {baum.inorder()}")
 
-    print("\n=== Searching for values ===")
-    for value in [40, 99]:
-        result = tree.search(value)
-        if result:
-            print(f"Value {value} found in node: {result}")
+    print("\n=== Nach Werten suchen ===")
+    for wert in [40, 99]:
+        ergebnis = baum.suchen(wert)
+        if ergebnis:
+            print(f"Wert {wert} gefunden in Knoten: {ergebnis}")
         else:
-            print(f"Value {value} not found in the tree.")
+            print(f"Wert {wert} nicht im Baum gefunden.")
 
-    print("\n=== Deleting values ===")
-    print("1. Deleting leaf node (20)...")
-    tree.delete(20)
-    print(f"Current in-order traversal: {tree.inorder()}")
+    print("\n=== Werte löschen ===")
+    print("1. Blattknoten löschen (20)...")
+    baum.loeschen(20)
+    print(f"Aktuelle Inorder-Traversierung: {baum.inorder()}")
 
-    print("2. Deleting node with one child (30)...")
-    tree.delete(30)
-    print(f"Current in-order traversal: {tree.inorder()}")
+    print("2. Knoten mit einem Kind löschen (30)...")
+    baum.loeschen(30)
+    print(f"Aktuelle Inorder-Traversierung: {baum.inorder()}")
 
-    print("3. Deleting node with two children (root: 50)...")
-    tree.delete(50)
-    print(f"Current in-order traversal: {tree.inorder()}")
-
+    print("3. Knoten mit zwei Kindern löschen (Wurzel: 50)...")
+    baum.loeschen(50)
+    print(f"Aktuelle Inorder-Traversierung: {baum.inorder()}")
