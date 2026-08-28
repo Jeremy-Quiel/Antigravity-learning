@@ -1,227 +1,227 @@
 from typing import List, Optional
 
 
-class Knoten:
-    """Repräsentiert einen einzelnen Knoten in einem binären Suchbaum.
+class Nodo:
+    """Representa un nodo individual en un árbol binario de búsqueda.
 
-    Jeder Knoten speichert einen ganzzahligen Wert sowie Verweise auf sein
-    linkes und rechtes Kind. Ein fehlendes Kind wird durch ``None`` dargestellt.
+    Cada nodo almacena un valor entero, así como referencias a sus nodos hijos
+    izquierdo y derecho. La ausencia de un nodo hijo se representa con ``None``.
     """
 
-    def __init__(self, wert: int):
-        """Initialisiert einen Knoten mit einem ganzzahligen Wert.
+    def __init__(self, valor: int):
+        """Inicializa un nodo con un valor entero.
 
-        :param wert: Der zu speichernde ganzzahlige Wert.
+        :param valor: El valor entero que se almacenará en el nodo.
         """
-        self.wert: int = wert
-        self.links: Optional["Knoten"] = None
-        self.rechts: Optional["Knoten"] = None
+        self.valor: int = valor
+        self.izquierdo: Optional["Nodo"] = None
+        self.derecho: Optional["Nodo"] = None
 
     def __repr__(self) -> str:
-        """Gibt eine lesbare Zeichenkettendarstellung des Knotens zurück."""
-        return f"Knoten({self.wert})"
+        """Devuelve una representación legible en cadena de texto del nodo."""
+        return f"Nodo({self.valor})"
 
 
-class BinaererSuchbaum:
-    """Implementierung eines binären Suchbaums für ganzzahlige Werte."""
+class ArbolBinarioBusqueda:
+    """Implementación de un árbol binario de búsqueda para valores enteros."""
 
     def __init__(self):
-        """Erstellt einen leeren binären Suchbaum ohne Wurzelknoten."""
-        self.wurzel: Optional[Knoten] = None
+        """Inicializa un árbol binario de búsqueda vacío sin nodo raíz."""
+        self.raiz: Optional[Nodo] = None
 
     # =========================================================================
-    # EINFÜGEN
+    # INSERCIÓN
     # =========================================================================
-    def einfuegen(self, wert: int) -> None:
-        """Fügt einen neuen ganzzahligen Wert in den Baum ein.
+    def insertar(self, valor: int) -> None:
+        """Inserta un nuevo valor entero en el árbol.
 
-        Falls der Wert bereits existiert, wird er nicht erneut eingefügt.
-        :param wert: Der einzufügende ganzzahlige Wert.
-        :raises TypeError: Wenn der Wert keine ganze Zahl ist.
+        Si el valor ya existe en el árbol, no se vuelve a insertar.
+        :param valor: El valor entero a insertar.
+        :raises TypeError: Si el valor no es un número entero.
         """
-        if not isinstance(wert, int):
-            raise TypeError("Der Wert muss eine ganze Zahl sein.")
+        if not isinstance(valor, int):
+            raise TypeError("El valor debe ser un número entero.")
 
-        if self.wurzel is None:
-            self.wurzel = Knoten(wert)
+        if self.raiz is None:
+            self.raiz = Nodo(valor)
         else:
-            self._einfuegen_rekursiv(self.wurzel, wert)
+            self._insertar_recursivo(self.raiz, valor)
 
-    def _einfuegen_rekursiv(self, aktuell: Knoten, wert: int) -> None:
-        """Platziert einen Wert rekursiv gemäß den Regeln des binären Suchbaums.
+    def _insertar_recursivo(self, actual: Nodo, valor: int) -> None:
+        """Ubica un valor de forma recursiva según las reglas del árbol binario de búsqueda.
 
-        :param aktuell: Der aktuell betrachtete Knoten.
-        :param wert: Der einzufügende Wert.
+        :param actual: El nodo que se está evaluando actualmente.
+        :param valor: El valor a insertar.
         """
-        if wert < aktuell.wert:
-            # Kleinere Werte gehören in den linken Teilbaum
-            if aktuell.links is None:
-                aktuell.links = Knoten(wert)
+        if valor < actual.valor:
+            # Los valores menores pertenecen al subárbol izquierdo
+            if actual.izquierdo is None:
+                actual.izquierdo = Nodo(valor)
             else:
-                self._einfuegen_rekursiv(aktuell.links, wert)
-        elif wert > aktuell.wert:
-            # Größere Werte gehören in den rechten Teilbaum
-            if aktuell.rechts is None:
-                aktuell.rechts = Knoten(wert)
+                self._insertar_recursivo(actual.izquierdo, valor)
+        elif valor > actual.valor:
+            # Los valores mayores pertenecen al subárbol derecho
+            if actual.derecho is None:
+                actual.derecho = Nodo(valor)
             else:
-                self._einfuegen_rekursiv(aktuell.rechts, wert)
+                self._insertar_recursivo(actual.derecho, valor)
         else:
-            # Duplikate werden ignoriert, um eindeutige Werte beizubehalten
+            # Se ignoran los valores duplicados para mantener elementos únicos
             pass
 
     # =========================================================================
-    # SUCHEN
+    # BÚSQUEDA
     # =========================================================================
-    def suchen(self, wert: int) -> Optional[Knoten]:
-        """Sucht nach einem Wert und gibt den Knoten zurück oder ``None``.
+    def buscar(self, valor: int) -> Optional[Nodo]:
+        """Busca un valor y devuelve el nodo correspondiente o ``None``.
 
-        :param wert: Der gesuchte ganzzahlige Wert.
-        :return: Der gefundene Knoten oder None.
-        :raises TypeError: Wenn der gesuchte Wert keine ganze Zahl ist.
+        :param valor: El valor entero buscado.
+        :return: El nodo encontrado o None si no existe.
+        :raises TypeError: Si el valor buscado no es un número entero.
         """
-        if not isinstance(wert, int):
-            raise TypeError("Der zu suchende Wert muss eine ganze Zahl sein.")
-        return self._suchen_rekursiv(self.wurzel, wert)
+        if not isinstance(valor, int):
+            raise TypeError("El valor a buscar debe ser un número entero.")
+        return self._buscar_recursivo(self.raiz, valor)
 
-    def _suchen_rekursiv(self, aktuell: Optional[Knoten], wert: int) -> Optional[Knoten]:
-        """Durchsucht den Baum rekursiv durch Ausschluss des unzutreffenden Teilbaums.
+    def _buscar_recursivo(self, actual: Optional[Nodo], valor: int) -> Optional[Nodo]:
+        """Busca en el árbol de forma recursiva descartando el subárbol no correspondiente.
 
-        :param aktuell: Der aktuell untersuchte Knoten.
-        :param wert: Der gesuchte Wert.
-        :return: Der passende Knoten oder None.
+        :param actual: El nodo examinado actualmente.
+        :param valor: El valor buscado.
+        :return: El nodo coincidente o None.
         """
-        if aktuell is None or aktuell.wert == wert:
-            return aktuell
+        if actual is None or actual.valor == valor:
+            return actual
 
-        if wert < aktuell.wert:
-            return self._suchen_rekursiv(aktuell.links, wert)
-        return self._suchen_rekursiv(aktuell.rechts, wert)
+        if valor < actual.valor:
+            return self._buscar_recursivo(actual.izquierdo, valor)
+        return self._buscar_recursivo(actual.derecho, valor)
 
-    def enthaelt(self, wert: int) -> bool:
-        """Prüft, ob ein Wert im Baum vorhanden ist.
+    def contiene(self, valor: int) -> bool:
+        """Comprueba si un valor existe dentro del árbol.
 
-        :param wert: Der zu überprüfende Wert.
-        :return: True, wenn der Wert vorhanden ist, andernfalls False.
+        :param valor: El valor a verificar.
+        :return: True si el valor está presente; de lo contrario, False.
         """
-        return self.suchen(wert) is not None
+        return self.buscar(valor) is not None
 
     # =========================================================================
-    # LÖSCHEN
+    # ELIMINACIÓN
     # =========================================================================
-    def loeschen(self, wert: int) -> None:
-        """Entfernt einen ganzzahligen Wert aus dem Baum, falls vorhanden.
+    def eliminar(self, valor: int) -> None:
+        """Elimina un valor entero del árbol, en caso de que exista.
 
-        :param wert: Der zu entfernende ganzzahlige Wert.
-        :raises TypeError: Wenn der zu löschende Wert keine ganze Zahl ist.
+        :param valor: El valor entero a eliminar.
+        :raises TypeError: Si el valor a eliminar no es un número entero.
         """
-        if not isinstance(wert, int):
-            raise TypeError("Der zu löschende Wert muss eine ganze Zahl sein.")
-        self.wurzel = self._loeschen_rekursiv(self.wurzel, wert)
+        if not isinstance(valor, int):
+            raise TypeError("El valor a eliminar debe ser un número entero.")
+        self.raiz = self._eliminar_recursivo(self.raiz, valor)
 
-    def _loeschen_rekursiv(self, aktuell: Optional[Knoten], wert: int) -> Optional[Knoten]:
-        """Löscht einen Wert rekursiv und aktualisiert die Baumstruktur.
+    def _eliminar_recursivo(self, actual: Optional[Nodo], valor: int) -> Optional[Nodo]:
+        """Elimina un valor de forma recursiva y actualiza la estructura del árbol.
 
-        :param aktuell: Der Wurzelknoten des aktuellen Teilbaums.
-        :param wert: Der zu löschende Wert.
-        :return: Der neue Wurzelknoten des Teilbaums nach dem Löschvorgang.
+        :param actual: El nodo raíz del subárbol actual.
+        :param valor: El valor a eliminar.
+        :return: La nueva raíz del subárbol tras la operación de eliminación.
         """
-        if aktuell is None:
+        if actual is None:
             return None
 
-        # Navigation zum Zielknoten anhand der Suchbaumeigenschaft
-        if wert < aktuell.wert:
-            aktuell.links = self._loeschen_rekursiv(aktuell.links, wert)
-        elif wert > aktuell.wert:
-            aktuell.rechts = self._loeschen_rekursiv(aktuell.rechts, wert)
+        # Navegación hacia el nodo destino según las propiedades del árbol de búsqueda
+        if valor < actual.valor:
+            actual.izquierdo = self._eliminar_recursivo(actual.izquierdo, valor)
+        elif valor > actual.valor:
+            actual.derecho = self._eliminar_recursivo(actual.derecho, valor)
         else:
-            # Der zu löschende Knoten wurde gefunden
+            # Se ha encontrado el nodo a eliminar
 
-            # Fall 1: Knoten hat keine Kinder (Blattknoten)
-            if aktuell.links is None and aktuell.rechts is None:
+            # Caso 1: El nodo no tiene hijos (nodo hoja)
+            if actual.izquierdo is None and actual.derecho is None:
                 return None
 
-            # Fall 2: Knoten hat genau ein Kind
-            if aktuell.links is None:
-                return aktuell.rechts
-            elif aktuell.rechts is None:
-                return aktuell.links
+            # Caso 2: El nodo tiene exactamente un hijo
+            if actual.izquierdo is None:
+                return actual.derecho
+            elif actual.derecho is None:
+                return actual.izquierdo
 
-            # Fall 3: Knoten hat zwei Kinder
-            # Finde den Inorder-Nachfolger (kleinster Knoten im rechten Teilbaum)
-            nachfolger = self._minimum_ermitteln(aktuell.rechts)
-            aktuell.wert = nachfolger.wert
-            # Lösche den Nachfolger-Knoten aus dem rechten Teilbaum
-            aktuell.rechts = self._loeschen_rekursiv(aktuell.rechts, nachfolger.wert)
+            # Caso 3: El nodo tiene dos hijos
+            # Encontrar el sucesor inorden (nodo con el valor mínimo en el subárbol derecho)
+            sucesor = self._obtener_minimo(actual.derecho)
+            actual.valor = sucesor.valor
+            # Eliminar el nodo sucesor del subárbol derecho
+            actual.derecho = self._eliminar_recursivo(actual.derecho, sucesor.valor)
 
-        return aktuell
+        return actual
 
-    def _minimum_ermitteln(self, knoten: Knoten) -> Knoten:
-        """Ermittelt den Knoten mit dem kleinsten Wert in einem Teilbaum.
+    def _obtener_minimo(self, nodo: Nodo) -> Nodo:
+        """Obtiene el nodo con el valor más pequeño en un subárbol.
 
-        :param knoten: Der Startknoten für die Suche nach dem Minimum.
-        :return: Der Knoten mit dem kleinsten Wert.
+        :param nodo: El nodo inicial desde el cual buscar el valor mínimo.
+        :return: El nodo con el valor mínimo encontrado.
         """
-        aktuell = knoten
-        while aktuell.links is not None:
-            aktuell = aktuell.links
-        return aktuell
+        actual = nodo
+        while actual.izquierdo is not None:
+            actual = actual.izquierdo
+        return actual
 
     # =========================================================================
-    # INORDER-TRAVERSIERUNG
+    # RECORRIDO INORDEN
     # =========================================================================
-    def inorder(self) -> List[int]:
-        """Gibt alle Werte des Baums in aufsteigender Reihenfolge zurück.
+    def inorden(self) -> List[int]:
+        """Devuelve todos los valores del árbol en orden ascendente.
 
-        :return: Liste aller ganzzahligen Werte sortiert.
+        :return: Lista con todos los valores enteros ordenados.
         """
-        elemente: List[int] = []
-        self._inorder_rekursiv(self.wurzel, elemente)
-        return elemente
+        elementos: List[int] = []
+        self._inorden_recursivo(self.raiz, elementos)
+        return elementos
 
-    def _inorder_rekursiv(
-        self, aktuell: Optional[Knoten], elemente: List[int]
+    def _inorden_recursivo(
+        self, actual: Optional[Nodo], elementos: List[int]
     ) -> None:
-        """Fügt Werte rekursiv in der Reihenfolge Links-Wurzel-Rechts hinzu.
+        """Agrega valores recursivamente siguiendo el orden Izquierda-Raíz-Derecha.
 
-        :param aktuell: Der aktuell besuchte Knoten.
-        :param elemente: Die Zielliste für die sortierten Werte.
+        :param actual: El nodo visitado actualmente.
+        :param elementos: La lista destino para almacenar los valores ordenados.
         """
-        if aktuell is not None:
-            self._inorder_rekursiv(aktuell.links, elemente)
-            elemente.append(aktuell.wert)
-            self._inorder_rekursiv(aktuell.rechts, elemente)
+        if actual is not None:
+            self._inorden_recursivo(actual.izquierdo, elementos)
+            elementos.append(actual.valor)
+            self._inorden_recursivo(actual.derecho, elementos)
 
 
 # =============================================================================
-# ANWENDUNGSBEISPIEL UND TESTS
+# EJEMPLO DE USO Y PRUEBAS
 # =============================================================================
 if __name__ == "__main__":
-    baum = BinaererSuchbaum()
+    arbol = ArbolBinarioBusqueda()
 
-    print("=== Werte einfügen ===")
-    werte = [50, 30, 70, 20, 40, 60, 80]
-    for wert in werte:
-        baum.einfuegen(wert)
-    print(f"Eingefügte Werte: {werte}")
-    print(f"Inorder-Traversierung (sortiert): {baum.inorder()}")
+    print("=== Insertar valores ===")
+    valores = [50, 30, 70, 20, 40, 60, 80]
+    for valor in valores:
+        arbol.insertar(valor)
+    print(f"Valores insertados: {valores}")
+    print(f"Recorrido inorden (ordenado): {arbol.inorden()}")
 
-    print("\n=== Nach Werten suchen ===")
-    for wert in [40, 99]:
-        ergebnis = baum.suchen(wert)
-        if ergebnis:
-            print(f"Wert {wert} gefunden in Knoten: {ergebnis}")
+    print("\n=== Buscar valores ===")
+    for valor in [40, 99]:
+        resultado = arbol.buscar(valor)
+        if resultado:
+            print(f"Valor {valor} encontrado en el nodo: {resultado}")
         else:
-            print(f"Wert {wert} nicht im Baum gefunden.")
+            print(f"Valor {valor} no encontrado en el árbol.")
 
-    print("\n=== Werte löschen ===")
-    print("1. Blattknoten löschen (20)...")
-    baum.loeschen(20)
-    print(f"Aktuelle Inorder-Traversierung: {baum.inorder()}")
+    print("\n=== Eliminar valores ===")
+    print("1. Eliminar nodo hoja (20)...")
+    arbol.eliminar(20)
+    print(f"Recorrido inorden actual: {arbol.inorden()}")
 
-    print("2. Knoten mit einem Kind löschen (30)...")
-    baum.loeschen(30)
-    print(f"Aktuelle Inorder-Traversierung: {baum.inorder()}")
+    print("2. Eliminar nodo con un hijo (30)...")
+    arbol.eliminar(30)
+    print(f"Recorrido inorden actual: {arbol.inorden()}")
 
-    print("3. Knoten mit zwei Kindern löschen (Wurzel: 50)...")
-    baum.loeschen(50)
-    print(f"Aktuelle Inorder-Traversierung: {baum.inorder()}")
+    print("3. Eliminar nodo con dos hijos (raíz: 50)...")
+    arbol.eliminar(50)
+    print(f"Recorrido inorden actual: {arbol.inorden()}")
