@@ -1,261 +1,225 @@
 #!/usr/bin/env python3
 """
-Calculadora de terminal interactiva con soporte para operaciones básicas y avanzadas:
-suma, resta, multiplicación, división, potencia y factorial.
-Utiliza códigos de escape ANSI para dar formato visual y colores en consola.
+Interactive terminal calculator supporting basic and advanced operations:
+addition, subtraction, multiplication, division, power, and factorial.
+Uses ANSI escape codes for formatted console colors and layout.
 """
 
 import math
 
-# Códigos de escape ANSI para colores y estilos en la terminal
+# ANSI escape codes for terminal colors and formatting
 RESET = "\033[0m"
-NEGRITA = "\033[1m"
+BOLD = "\033[1m"
 CYAN = "\033[36m"
-VERDE = "\033[32m"
-AMARILLO = "\033[33m"
-ROJO = "\033[31m"
-AZUL = "\033[34m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+RED = "\033[31m"
+BLUE = "\033[34m"
 MAGENTA = "\033[35m"
 
 
-def mostrar_encabezado() -> None:
-    """Muestra el banner de bienvenida y el título de la calculadora."""
-    print(f"\n{CYAN}{NEGRITA}{'=' * 45}{RESET}")
-    print(f"{CYAN}{NEGRITA}        CALCULADORA DE TERMINAL{RESET}")
-    print(f"{CYAN}{NEGRITA}{'=' * 45}{RESET}")
+def display_header() -> None:
+  """Display the welcoming banner and calculator title."""
+  print(f"\n{CYAN}{BOLD}{'=' * 45}{RESET}")
+  print(f"{CYAN}{BOLD}        TERMINAL CALCULATOR{RESET}")
+  print(f"{CYAN}{BOLD}{'=' * 45}{RESET}")
 
 
-def mostrar_menu() -> None:
-    """Muestra las opciones disponibles en el menú principal."""
-    print(f"\n{MAGENTA}{NEGRITA}--- MENÚ DE OPERACIONES ---{RESET}")
-    print(f"  {VERDE}{NEGRITA}[1]{RESET} Sumar dos números")
-    print(f"  {VERDE}{NEGRITA}[2]{RESET} Restar dos números")
-    print(f"  {VERDE}{NEGRITA}[3]{RESET} Multiplicar dos números")
-    print(f"  {VERDE}{NEGRITA}[4]{RESET} Dividir dos números")
-    print(f"  {VERDE}{NEGRITA}[5]{RESET} Potencia (base ^ exponente)")
-    print(f"  {VERDE}{NEGRITA}[6]{RESET} Factorial (n!)")
-    print(f"  {ROJO}{NEGRITA}[7]{RESET} Salir")
-    print(f"{MAGENTA}{'-' * 27}{RESET}")
+def display_menu() -> None:
+  """Display available operation options in the main menu."""
+  print(f"\n{MAGENTA}{BOLD}--- OPERATIONS MENU ---{RESET}")
+  print(f"  {GREEN}{BOLD}[1]{RESET} Add two numbers")
+  print(f"  {GREEN}{BOLD}[2]{RESET} Subtract two numbers")
+  print(f"  {GREEN}{BOLD}[3]{RESET} Multiply two numbers")
+  print(f"  {GREEN}{BOLD}[4]{RESET} Divide two numbers")
+  print(f"  {GREEN}{BOLD}[5]{RESET} Power (base ^ exponent)")
+  print(f"  {GREEN}{BOLD}[6]{RESET} Factorial (n!)")
+  print(f"  {RED}{BOLD}[7]{RESET} Exit")
+  print(f"{MAGENTA}{'-' * 27}{RESET}")
 
 
-def solicitar_numero(etiqueta: str) -> float:
-    """
-    Solicita un valor numérico por consola y valida que sea válido.
+def prompt_number(label: str) -> float:
+  """Prompt user for a valid decimal or integer number.
 
-    :param etiqueta: Texto descriptivo que indica cuál número se solicita.
-    :return: Número decimal (float) válido ingresado por el usuario.
-    """
-    while True:
-        entrada = input(f"{AZUL}{NEGRITA}{etiqueta}: {RESET}").strip()
-        try:
-            return float(entrada)
-        except ValueError:
-            print(
-                f"{ROJO}❌ Error: Entrada inválida. Por favor, introduce un número.{RESET}"
-            )
+  :param label: Descriptive label for the expected number.
+  :return: Validated float value.
+  """
+  while True:
+    raw_input_val = input(f"{BLUE}{BOLD}{label}: {RESET}").strip()
+    try:
+      return float(raw_input_val)
+    except ValueError:
+      print(f"{RED}❌ Error: Invalid input. Please enter a valid number.{RESET}")
 
 
-def solicitar_entero_no_negativo(etiqueta: str) -> int:
-    """
-    Solicita un número entero no negativo para operaciones como factorial.
+def prompt_non_negative_integer(label: str) -> int:
+  """Prompt user for a non-negative integer (e.g., for factorial).
 
-    :param etiqueta: Texto descriptivo que indica el valor solicitado.
-    :return: Número entero >= 0 ingresado por el usuario.
-    """
-    while True:
-        entrada = input(f"{AZUL}{NEGRITA}{etiqueta}: {RESET}").strip()
-        try:
-            valor = int(entrada)
-            if valor < 0:
-                print(
-                    f"{ROJO}❌ Error: El número debe ser un entero no negativo (>= 0).{RESET}"
-                )
-                continue
-            return valor
-        except ValueError:
-            print(
-                f"{ROJO}❌ Error: Entrada inválida. Debe ser un número entero.{RESET}"
-            )
+  :param label: Descriptive prompt label.
+  :return: Validated non-negative integer (n >= 0).
+  """
+  while True:
+    raw_input_val = input(f"{BLUE}{BOLD}{label}: {RESET}").strip()
+    try:
+      val = int(raw_input_val)
+      if val < 0:
+        print(f"{RED}❌ Error: Number must be a non-negative integer (>= 0).{RESET}")
+        continue
+      return val
+    except ValueError:
+      print(f"{RED}❌ Error: Invalid input. Please enter a whole integer.{RESET}")
 
 
-def sumar(a: float, b: float) -> float:
-    """Realiza la suma de dos números."""
-    return a + b
+def add(a: float, b: float) -> float:
+  """Calculate the sum of two numbers."""
+  return a + b
 
 
-def restar(a: float, b: float) -> float:
-    """Realiza la resta de dos números (a - b)."""
-    return a - b
+def subtract(a: float, b: float) -> float:
+  """Calculate the subtraction of two numbers (a - b)."""
+  return a - b
 
 
-def multiplicar(a: float, b: float) -> float:
-    """Realiza la multiplicación de dos números (a * b)."""
-    return a * b
+def multiply(a: float, b: float) -> float:
+  """Calculate the multiplication of two numbers (a * b)."""
+  return a * b
 
 
-def dividir(a: float, b: float) -> float:
-    """
-    Realiza la división de dos números (a / b).
-    
-    :raises ZeroDivisionError: Si el divisor es 0.
-    """
-    if b == 0:
-        raise ZeroDivisionError("No es posible dividir entre cero.")
-    return a / b
+def divide(a: float, b: float) -> float:
+  """Calculate the division of two numbers (a / b).
+
+  :raises ZeroDivisionError: If the divisor is 0.
+  """
+  if b == 0:
+    raise ZeroDivisionError("Cannot divide by zero.")
+  return a / b
 
 
-def calcular_potencia(base: float, exponente: float) -> float:
-    """
-    Calcula la potencia de una base elevada a un exponente (base ^ exponente).
-    Soporta exponentes positivos, negativos y decimales.
-    
-    :raises ZeroDivisionError: Si la base es 0 y el exponente es negativo.
-    """
-    if base == 0 and exponente < 0:
-        raise ZeroDivisionError("Cero no puede elevarse a un exponente negativo.")
-    return base ** exponente
+def power(base: float, exponent: float) -> float:
+  """Calculate base raised to the power of exponent (base ^ exponent).
+
+  :raises ZeroDivisionError: If base is zero with a negative exponent.
+  """
+  if base == 0 and exponent < 0:
+    raise ZeroDivisionError("Zero cannot be raised to a negative power.")
+  return base ** exponent
 
 
-def calcular_factorial(n: int) -> int:
-    """
-    Calcula el factorial de un número entero no negativo (n!).
-    
-    :raises ValueError: Si el número es negativo.
-    """
-    if n < 0:
-        raise ValueError("El factorial solo está definido para enteros no negativos.")
-    return math.factorial(n)
+def factorial(n: int) -> int:
+  """Calculate the factorial of a non-negative integer (n!).
+
+  :raises ValueError: If the input is negative.
+  """
+  if n < 0:
+    raise ValueError("Factorial is only defined for non-negative integers.")
+  return math.factorial(n)
 
 
-def formatear_numero(n: float) -> str:
-    """Formatea el número para mostrarlo como entero si no tiene decimales."""
-    if isinstance(n, int) or (isinstance(n, float) and n.is_integer()):
-        return str(int(n))
-    return f"{n:.6f}".rstrip("0").rstrip(".")
+def format_number(n: float) -> str:
+  """Format a float to integer representation if there is no decimal component."""
+  if isinstance(n, int) or (isinstance(n, float) and n.is_integer()):
+    return str(int(n))
+  return f"{n:.6f}".rstrip("0").rstrip(".")
 
 
 def main() -> None:
-    """Bucle principal de la calculadora interactiva."""
-    mostrar_encabezado()
+  """Main execution loop for the interactive terminal calculator."""
+  display_header()
 
-    while True:
-        mostrar_menu()
-        opcion = input(
-            f"{AMARILLO}{NEGRITA}Selecciona una opción (1-7): {RESET}"
-        ).strip()
+  while True:
+    display_menu()
+    choice = input(f"{YELLOW}{BOLD}Select an option (1-7): {RESET}").strip()
 
-        if opcion == "1":
-            # Operación de Suma
-            print(f"\n{CYAN}{NEGRITA}>> OPERACIÓN: SUMA{RESET}")
-            num1 = solicitar_numero("Introduce el primer número")
-            num2 = solicitar_numero("Introduce el segundo número")
-            resultado = sumar(num1, num2)
+    if choice == "1":
+      # Addition Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: ADDITION{RESET}")
+      num1 = prompt_number("Enter the first number")
+      num2 = prompt_number("Enter the second number")
+      result = add(num1, num2)
 
-            str_num1 = formatear_numero(num1)
-            str_num2 = formatear_numero(num2)
-            str_res = formatear_numero(resultado)
+      str_num1 = format_number(num1)
+      str_num2 = format_number(num2)
+      str_res = format_number(result)
 
-            print(
-                f"\n{VERDE}{NEGRITA}✔ Resultado:{RESET} "
-                f"{str_num1} + {str_num2} = {VERDE}{NEGRITA}{str_res}{RESET}"
-            )
+      print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {str_num1} + {str_num2} = {GREEN}{BOLD}{str_res}{RESET}")
 
-        elif opcion == "2":
-            # Operación de Resta
-            print(f"\n{CYAN}{NEGRITA}>> OPERACIÓN: RESTA{RESET}")
-            num1 = solicitar_numero("Introduce el primer número")
-            num2 = solicitar_numero("Introduce el segundo número")
-            resultado = restar(num1, num2)
+    elif choice == "2":
+      # Subtraction Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: SUBTRACTION{RESET}")
+      num1 = prompt_number("Enter the first number")
+      num2 = prompt_number("Enter the second number")
+      result = subtract(num1, num2)
 
-            str_num1 = formatear_numero(num1)
-            str_num2 = formatear_numero(num2)
-            str_res = formatear_numero(resultado)
+      str_num1 = format_number(num1)
+      str_num2 = format_number(num2)
+      str_res = format_number(result)
 
-            print(
-                f"\n{VERDE}{NEGRITA}✔ Resultado:{RESET} "
-                f"{str_num1} - {str_num2} = {VERDE}{NEGRITA}{str_res}{RESET}"
-            )
+      print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {str_num1} - {str_num2} = {GREEN}{BOLD}{str_res}{RESET}")
 
-        elif opcion == "3":
-            # Operación de Multiplicación
-            print(f"\n{CYAN}{NEGRITA}>> OPERACIÓN: MULTIPLICACIÓN{RESET}")
-            num1 = solicitar_numero("Introduce el primer número")
-            num2 = solicitar_numero("Introduce el segundo número")
-            resultado = multiplicar(num1, num2)
+    elif choice == "3":
+      # Multiplication Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: MULTIPLICATION{RESET}")
+      num1 = prompt_number("Enter the first number")
+      num2 = prompt_number("Enter the second number")
+      result = multiply(num1, num2)
 
-            str_num1 = formatear_numero(num1)
-            str_num2 = formatear_numero(num2)
-            str_res = formatear_numero(resultado)
+      str_num1 = format_number(num1)
+      str_num2 = format_number(num2)
+      str_res = format_number(result)
 
-            print(
-                f"\n{VERDE}{NEGRITA}✔ Resultado:{RESET} "
-                f"{str_num1} × {str_num2} = {VERDE}{NEGRITA}{str_res}{RESET}"
-            )
+      print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {str_num1} × {str_num2} = {GREEN}{BOLD}{str_res}{RESET}")
 
-        elif opcion == "4":
-            # Operación de División
-            print(f"\n{CYAN}{NEGRITA}>> OPERACIÓN: DIVISIÓN{RESET}")
-            num1 = solicitar_numero("Introduce el dividendo")
-            while True:
-                num2 = solicitar_numero("Introduce el divisor")
-                if num2 == 0:
-                    print(f"{ROJO}❌ Error: No se puede dividir entre cero. Intenta con otro divisor.{RESET}")
-                else:
-                    break
-
-            resultado = dividir(num1, num2)
-            str_num1 = formatear_numero(num1)
-            str_num2 = formatear_numero(num2)
-            str_res = formatear_numero(resultado)
-
-            print(
-                f"\n{VERDE}{NEGRITA}✔ Resultado:{RESET} "
-                f"{str_num1} ÷ {str_num2} = {VERDE}{NEGRITA}{str_res}{RESET}"
-            )
-
-        elif opcion == "5":
-            # Operación de Potencia
-            print(f"\n{CYAN}{NEGRITA}>> OPERACIÓN: POTENCIA{RESET}")
-            base = solicitar_numero("Introduce la base")
-            exponente = solicitar_numero("Introduce el exponente")
-
-            try:
-                resultado = calcular_potencia(base, exponente)
-                str_base = formatear_numero(base)
-                str_exp = formatear_numero(exponente)
-                str_res = formatear_numero(resultado)
-
-                print(
-                    f"\n{VERDE}{NEGRITA}✔ Resultado:{RESET} "
-                    f"{str_base} ^ {str_exp} = {VERDE}{NEGRITA}{str_res}{RESET}"
-                )
-            except ZeroDivisionError as e:
-                print(f"{ROJO}❌ Error matemático: {e}{RESET}")
-
-        elif opcion == "6":
-            # Operación de Factorial
-            print(f"\n{CYAN}{NEGRITA}>> OPERACIÓN: FACTORIAL{RESET}")
-            n = solicitar_entero_no_negativo("Introduce un número entero no negativo (n >= 0)")
-            resultado = calcular_factorial(n)
-
-            print(
-                f"\n{VERDE}{NEGRITA}✔ Resultado:{RESET} "
-                f"{n}! = {VERDE}{NEGRITA}{resultado}{RESET}"
-            )
-
-        elif opcion == "7":
-            # Salir de la aplicación
-            print(
-                f"\n{CYAN}{NEGRITA}¡Gracias por usar la calculadora! Hasta pronto.{RESET}\n"
-            )
-            break
-
+    elif choice == "4":
+      # Division Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: DIVISION{RESET}")
+      num1 = prompt_number("Enter the dividend")
+      while True:
+        num2 = prompt_number("Enter the divisor")
+        if num2 == 0:
+          print(f"{RED}❌ Error: Cannot divide by zero. Please enter another divisor.{RESET}")
         else:
-            # Opción no válida
-            print(
-                f"{ROJO}❌ Opción no reconocida. Por favor, elige una opción del 1 al 7.{RESET}"
-            )
+          break
+
+      result = divide(num1, num2)
+      str_num1 = format_number(num1)
+      str_num2 = format_number(num2)
+      str_res = format_number(result)
+
+      print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {str_num1} ÷ {str_num2} = {GREEN}{BOLD}{str_res}{RESET}")
+
+    elif choice == "5":
+      # Power Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: POWER{RESET}")
+      base = prompt_number("Enter the base")
+      exponent = prompt_number("Enter the exponent")
+
+      try:
+        result = power(base, exponent)
+        str_base = format_number(base)
+        str_exp = format_number(exponent)
+        str_res = format_number(result)
+
+        print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {str_base} ^ {str_exp} = {GREEN}{BOLD}{str_res}{RESET}")
+      except ZeroDivisionError as e:
+        print(f"{RED}❌ Math error: {e}{RESET}")
+
+    elif choice == "6":
+      # Factorial Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: FACTORIAL{RESET}")
+      n = prompt_non_negative_integer("Enter a non-negative integer (n >= 0)")
+      result = factorial(n)
+
+      print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {n}! = {GREEN}{BOLD}{result}{RESET}")
+
+    elif choice == "7":
+      # Exit
+      print(f"\n{CYAN}{BOLD}Thank you for using the calculator! Goodbye.{RESET}\n")
+      break
+
+    else:
+      # Invalid Option
+      print(f"{RED}❌ Unrecognized option. Please choose a number from 1 to 7.{RESET}")
 
 
 if __name__ == "__main__":
-    main()
+  main()

@@ -1,43 +1,43 @@
-# Documentación de Modelos - Antigravity SDK
+# Model Documentation - Antigravity SDK
 
-Este texto explica los modelos de Inteligencia Artificial que funcionan con la herramienta **Google Antigravity SDK**. El sistema está hecho para trabajar con agentes automáticos. Estos modelos ayudan a los agentes a pensar, usar herramientas, seguir reglas de seguridad y coordinar ayudantes.
+This document explains the Artificial Intelligence models compatible with the **Google Antigravity SDK** tool. The system is designed to work with autonomous agents. These models assist agents in reasoning, tool usage, policy enforcement, and subagent orchestration.
 
-## Procesamiento Rápido y Orquestación de Agentes (Baja Latencia)
+## Fast Processing and Agent Orchestration (Low Latency)
 
-Estos modelos dan respuestas rápidas, deciden con agilidad y controlan el trabajo de los agentes de inicio a fin.
+These models provide fast responses, agile decision-making, and manage the full lifecycle of autonomous agents.
 
 ### Gemini 3.7 Flash
-* **Características Principales:** Es el modelo principal de Antigravity SDK desde mediados o finales de 2026. Está preparado para la base (*harness*) de Antigravity. Funciona con mucha rapidez al usar herramientas (Tool Calling) y al pedir ayuda a otros agentes.
-* **Uso Recomendado:** Es ideal como modelo básico para tareas generales, trabajos rápidos, chats en la terminal y tareas comunes que necesitan respuestas casi al instante.
+* **Key Features:** The primary default model in the Antigravity SDK since mid-to-late 2026. Optimized and co-trained for the Antigravity *harness*, providing high speed for tool calling and subagent delegation.
+* **Recommended Usage:** Ideal as the base model for general-purpose agents, high-speed automated workflows, terminal interactions, and standard tasks requiring near-instant responses.
 
 ### Gemini 3.5 Flash
-* **Características Principales:** Fue el modelo inicial cuando salió Antigravity 2.0. Funciona muy bien para recordar el estado del agente, añadir herramientas propias y ejecutar avisos (*hooks*) de inicio a fin.
-* **Uso Recomendado:** Es muy bueno para seguir usando agentes antiguos, hacer pruebas de control o tareas secundarias que gasten pocos recursos sin perder funciones útiles.
+* **Key Features:** The initial default model at the launch of Antigravity 2.0. Highly reliable for agent state management, custom tool registration, and lifecycle hook execution.
+* **Recommended Usage:** Excellent for backwards compatibility with legacy agents, regression testing, or auxiliary tasks where resource usage must be minimized without losing agentic capabilities.
 
-## Análisis Profundo y Tareas Complejas (Alto Razonamiento)
+## Deep Analysis and Complex Tasks (High Reasoning)
 
-Modelos muy potentes creados para leer textos largos, pensar a fondo y resolver problemas difíciles.
+High-capacity models designed for long contexts, advanced reasoning, and solving complex algorithmic challenges.
 
 ### Gemini 3.1 Pro
-* **Características Principales:** Versión "Pro" centrada en entender ideas difíciles, revisar carpetas enteras de código y planear tareas en varios pasos (multi-step planning).
-* **Uso Recomendado:** Cambios grandes en el código, diseño de nuevos programas, revisiones de seguridad a fondo e investigaciones difíciles que necesitan recordar muchos datos de un proyecto.
+* **Key Features:** "Pro" variant focused on deep logical comprehension, whole-repository codebase analysis, and multi-step planning.
+* **Recommended Usage:** Large-scale code refactoring, new system architecture design, in-depth security audits, and complex research requiring retention and cross-referencing of extensive repository data.
 
 ### Claude 4.6 (Opus)
-* **Características Principales:** Es el modelo más fuerte de Anthropic disponible en el sistema. Destaca por leer gran cantidad de datos, escribir explicaciones claras y analizar ideas abstractas.
-* **Uso Recomendado:** Escribir manuales largos, revisar cómo se conectan las partes de proyectos antiguos y resolver problemas de diseño de programas que necesitan pensar en grande.
+* **Key Features:** The most capable model in the Anthropic family supported on the platform. Excels at assimilating large contexts, clear technical writing, and abstract logical reasoning.
+* **Recommended Usage:** Authoring extensive technical manuals, analyzing cross-dependencies in legacy monolithic projects, and solving high-level software architectural challenges.
 
-## Flujos de Trabajo Versátiles e Interactivos
+## Versatile and Interactive Workflows
 
-Modelos equilibrados que combinan buen nivel de respuesta, memoria y rapidez.
+Balanced models offering an optimal ratio between intelligence, context retention, and response latency.
 
 ### Claude 4.6 (Sonnet)
-* **Características Principales:** Versión rápida de Anthropic. Entiende muy bien el lenguaje común y el código (como Opus), pero responde más rápido.
-* **Uso Recomendado:** Ayuda al escribir código, trabajo en equipo en Antigravity IDE, revisión de cambios (Pull Requests) y creación rápida de pruebas para código nuevo.
+* **Key Features:** Optimized Anthropic variant combining strong comprehension of natural language and code (similar to Opus) with reduced response times.
+* **Recommended Usage:** Interactive code assistance, pair-programming in Antigravity IDE, Pull Request reviews, and rapid unit test generation for newly authored code.
 
-## Despliegues Privados y Ecosistema Abierto (Open Source)
+## Private Deployments and Open Ecosystem (Open Source)
 
-Modelos pensados para cuidar la privacidad de los datos, trabajar sin internet o hacer pruebas libres.
+Models designed for strict data privacy policies, isolated environments, or open research needs.
 
 ### GPT-OSS-120B
-* **Características Principales:** Modelo libre y abierto de gran tamaño (120 mil millones de parámetros). Es una opción frente a los modelos cerrados del SDK. Permite ver todos sus datos y saber cómo funciona por dentro.
-* **Uso Recomendado:** Uso en computadoras propias (on-premise) cuando los datos no deben salir de la oficina, cumplimiento de reglas estrictas de privacidad (lugares aislados o *air-gapped*) o ajustes especiales para ciencias e investigación.
+* **Key Features:** Large-scale open-weights language model (120 billion parameters). Provides a robust alternative to proprietary models in the SDK, allowing full inspection and transparency of weights and runtime.
+* **Recommended Usage:** Local on-premise agent deployments where corporate data cannot leave the private network, compliance with strict air-gapped security policies, or low-level customizations for scientific research.
