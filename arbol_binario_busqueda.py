@@ -1,170 +1,180 @@
-from typing import Optional, List
+from typing import List, Optional
 
 
-class Nodo:
-    """Representa un nodo en el árbol binario de búsqueda."""
+class Node:
+    """Represent one node in a binary search tree.
 
-    def __init__(self, valor: int):
-        self.valor: int = valor
-        self.izquierda: Optional["Nodo"] = None
-        self.derecha: Optional["Nodo"] = None
+    Each node stores an integer and references to its left and right children.
+    A missing child is represented by ``None``.
+    """
+
+    def __init__(self, value: int):
+        self.value: int = value
+        self.left: Optional["Node"] = None
+        self.right: Optional["Node"] = None
 
     def __repr__(self) -> str:
-        return f"Nodo({self.valor})"
+        """Return a concise representation containing the node's value."""
+        return f"Node({self.value})"
 
 
-class ArbolBinarioBusqueda:
-    """Implementación de un Árbol Binario de Búsqueda (BST)."""
+class BinarySearchTree:
+    """Implement a binary search tree (BST) containing integer values."""
 
     def __init__(self):
-        self.raiz: Optional[Nodo] = None
+        """Create an empty tree with no root node."""
+        self.root: Optional[Node] = None
 
     # =========================================================================
-    # MÉTODO METER
+    # INSERTION
     # =========================================================================
-    def meter(self, valor: int) -> None:
-        """Inserta/mete un nuevo valor entero en el árbol."""
-        if not isinstance(valor, int):
-            raise TypeError("El valor debe ser un número entero.")
+    def insert(self, value: int) -> None:
+        """Insert an integer value into the tree if it is not already present."""
+        if not isinstance(value, int):
+            raise TypeError("The value must be an integer.")
 
-        if self.raiz is None:
-            self.raiz = Nodo(valor)
+        if self.root is None:
+            self.root = Node(value)
         else:
-            self._meter_recursivo(self.raiz, valor)
+            self._insert_recursive(self.root, value)
 
-    def _meter_recursivo(self, actual: Nodo, valor: int) -> None:
-        if valor < actual.valor:
-            if actual.izquierda is None:
-                actual.izquierda = Nodo(valor)
+    def _insert_recursive(self, current: Node, value: int) -> None:
+        """Place a value recursively according to the BST ordering rule."""
+        if value < current.value:
+            if current.left is None:
+                current.left = Node(value)
             else:
-                self._meter_recursivo(actual.izquierda, valor)
-        elif valor > actual.valor:
-            if actual.derecha is None:
-                actual.derecha = Nodo(valor)
+                self._insert_recursive(current.left, value)
+        elif value > current.value:
+            if current.right is None:
+                current.right = Node(value)
             else:
-                self._meter_recursivo(actual.derecha, valor)
+                self._insert_recursive(current.right, value)
         else:
-            # Si el valor ya existe, no se duplica (o se puede omitir/ignorar)
+            # Existing values are ignored so the tree never contains duplicates.
             pass
 
     # =========================================================================
-    # MÉTODO BUSCAR
+    # SEARCH
     # =========================================================================
-    def buscar(self, valor: int) -> Optional[Nodo]:
+    def search(self, value: int) -> Optional[Node]:
         """
-        Busca un valor en el árbol.
-        Retorna el Nodo correspondiente si se encuentra, o None si no existe.
+        Search for a value and return its node, or ``None`` when it is absent.
         """
-        if not isinstance(valor, int):
-            raise TypeError("El valor a buscar debe ser un número entero.")
-        return self._buscar_recursivo(self.raiz, valor)
+        if not isinstance(value, int):
+            raise TypeError("The value to search for must be an integer.")
+        return self._search_recursive(self.root, value)
 
-    def _buscar_recursivo(self, actual: Optional[Nodo], valor: int) -> Optional[Nodo]:
-        if actual is None or actual.valor == valor:
-            return actual
+    def _search_recursive(self, current: Optional[Node], value: int) -> Optional[Node]:
+        """Search recursively by discarding the half that cannot contain value."""
+        if current is None or current.value == value:
+            return current
 
-        if valor < actual.valor:
-            return self._buscar_recursivo(actual.izquierda, valor)
-        return self._buscar_recursivo(actual.derecha, valor)
+        if value < current.value:
+            return self._search_recursive(current.left, value)
+        return self._search_recursive(current.right, value)
 
-    def contiene(self, valor: int) -> bool:
-        """Verifica si un valor existe en el árbol retornando True o False."""
-        return self.buscar(valor) is not None
+    def contains(self, value: int) -> bool:
+        """Return ``True`` when value exists in the tree; otherwise return ``False``."""
+        return self.search(value) is not None
 
     # =========================================================================
-    # MÉTODO ELIMINAR
+    # DELETION
     # =========================================================================
-    def eliminar(self, valor: int) -> None:
-        """Elimina un valor entero del árbol."""
-        if not isinstance(valor, int):
-            raise TypeError("El valor a eliminar debe ser un número entero.")
-        self.raiz = self._eliminar_recursivo(self.raiz, valor)
+    def delete(self, value: int) -> None:
+        """Remove an integer value from the tree when it is present."""
+        if not isinstance(value, int):
+            raise TypeError("The value to delete must be an integer.")
+        self.root = self._delete_recursive(self.root, value)
 
-    def _eliminar_recursivo(self, actual: Optional[Nodo], valor: int) -> Optional[Nodo]:
-        if actual is None:
+    def _delete_recursive(self, current: Optional[Node], value: int) -> Optional[Node]:
+        """Delete value recursively and return the subtree's updated root."""
+        if current is None:
             return None
 
-        # 1. Navegar por el árbol
-        if valor < actual.valor:
-            actual.izquierda = self._eliminar_recursivo(actual.izquierda, valor)
-        elif valor > actual.valor:
-            actual.derecha = self._eliminar_recursivo(actual.derecha, valor)
+        # Navigate toward the value using the BST ordering property.
+        if value < current.value:
+            current.left = self._delete_recursive(current.left, value)
+        elif value > current.value:
+            current.right = self._delete_recursive(current.right, value)
         else:
-            # Encontramos el nodo a eliminar
+            # The node to delete has been found.
 
-            # Caso 1: Nodo sin hijos (nodo hoja)
-            if actual.izquierda is None and actual.derecha is None:
+            # Case 1: the node is a leaf with no children.
+            if current.left is None and current.right is None:
                 return None
 
-            # Caso 2: Nodo con un solo hijo
-            if actual.izquierda is None:
-                return actual.derecha
-            elif actual.derecha is None:
-                return actual.izquierda
+            # Case 2: the node has exactly one child.
+            if current.left is None:
+                return current.right
+            elif current.right is None:
+                return current.left
 
-            # Caso 3: Nodo con dos hijos
-            # Encontrar el sucesor en inorden (nodo con el menor valor en el subárbol derecho)
-            sucesor = self._obtener_minimo(actual.derecha)
-            actual.valor = sucesor.valor
-            # Eliminar el sucesor del subárbol derecho
-            actual.derecha = self._eliminar_recursivo(actual.derecha, sucesor.valor)
+            # Case 3: replace a node with two children by its in-order successor.
+            successor = self._get_minimum(current.right)
+            current.value = successor.value
+            # Remove the successor from the right subtree after copying its value.
+            current.right = self._delete_recursive(current.right, successor.value)
 
-        return actual
+        return current
 
-    def _obtener_minimo(self, nodo: Nodo) -> Nodo:
-        """Encuentra el nodo con el valor mínimo a partir de un nodo dado."""
-        actual = nodo
-        while actual.izquierda is not None:
-            actual = actual.izquierda
-        return actual
+    def _get_minimum(self, node: Node) -> Node:
+        """Return the node with the smallest value in a subtree."""
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
 
     # =========================================================================
-    # RECORRIDO AUXILIAR PARA PRUEBAS
+    # IN-ORDER TRAVERSAL
     # =========================================================================
-    def inorden(self) -> List[int]:
-        """Retorna una lista con los elementos ordenados de menor a mayor."""
-        elementos: List[int] = []
-        self._inorden_recursivo(self.raiz, elementos)
-        return elementos
+    def inorder(self) -> List[int]:
+        """Return all tree values in ascending order."""
+        elements: List[int] = []
+        self._inorder_recursive(self.root, elements)
+        return elements
 
-    def _inorden_recursivo(self, actual: Optional[Nodo], elementos: List[int]) -> None:
-        if actual is not None:
-            self._inorden_recursivo(actual.izquierda, elementos)
-            elementos.append(actual.valor)
-            self._inorden_recursivo(actual.derecha, elementos)
+    def _inorder_recursive(
+        self, current: Optional[Node], elements: List[int]
+    ) -> None:
+        """Append values recursively in left-node-right order."""
+        if current is not None:
+            self._inorder_recursive(current.left, elements)
+            elements.append(current.value)
+            self._inorder_recursive(current.right, elements)
 
 
 # =============================================================================
 # EJEMPLO DE USO Y PRUEBAS
 # =============================================================================
 if __name__ == "__main__":
-    arbol = ArbolBinarioBusqueda()
+    tree = BinarySearchTree()
 
-    print("=== Metiendo valores ===")
-    valores = [50, 30, 70, 20, 40, 60, 80]
-    for v in valores:
-        arbol.meter(v)
-    print(f"Valores metidos: {valores}")
-    print(f"Recorrido In-Order (ordenado): {arbol.inorden()}")
+    print("=== Inserting values ===")
+    values = [50, 30, 70, 20, 40, 60, 80]
+    for value in values:
+        tree.insert(value)
+    print(f"Inserted values: {values}")
+    print(f"In-order traversal (sorted): {tree.inorder()}")
 
-    print("\n=== Buscando valores ===")
-    for v in [40, 99]:
-        resultado = arbol.buscar(v)
-        if resultado:
-            print(f"Valor {v} encontrado en el nodo: {resultado}")
+    print("\n=== Searching for values ===")
+    for value in [40, 99]:
+        result = tree.search(value)
+        if result:
+            print(f"Value {value} found in node: {result}")
         else:
-            print(f"Valor {v} no encontrado en el árbol.")
+            print(f"Value {value} not found in the tree.")
 
-    print("\n=== Eliminando valores ===")
-    print("1. Eliminando nodo hoja (20)...")
-    arbol.eliminar(20)
-    print(f"In-Order actual: {arbol.inorden()}")
+    print("\n=== Deleting values ===")
+    print("1. Deleting leaf node (20)...")
+    tree.delete(20)
+    print(f"Current in-order traversal: {tree.inorder()}")
 
-    print("2. Eliminando nodo con un solo hijo (30)...")
-    arbol.eliminar(30)
-    print(f"In-Order actual: {arbol.inorden()}")
+    print("2. Deleting node with one child (30)...")
+    tree.delete(30)
+    print(f"Current in-order traversal: {tree.inorder()}")
 
-    print("3. Eliminando nodo con dos hijos (raíz: 50)...")
-    arbol.eliminar(50)
-    print(f"In-Order actual: {arbol.inorden()}")
+    print("3. Deleting node with two children (root: 50)...")
+    tree.delete(50)
+    print(f"Current in-order traversal: {tree.inorder()}")
 
