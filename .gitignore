@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dll
+*.dylib
+*.exe
+
+# Virtual Environments
+.venv/
+venv/
+env/
+/site-packages/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Unit test / coverage
+coverage/
+.pytest_cache/
+.mypy_cache/
+.tox/
+
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+.DS_Store
