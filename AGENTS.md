@@ -6,9 +6,15 @@ This document centralizes and integrates all policies, behavioral guidelines, an
 
 The following modularized rules are imported and enforced:
 
-@import .agents/git.md
-@import .agents/idioma.md
-@import .agents/formatoCodigo.md
+@import .agents/rules/git.md
+@import .agents/rules/idioma.md
+@import .agents/rules/formatoCodigo.md
+
+## Workflofs Modules
+
+The following modularizes workflows are imported and enforced:
+
+@import .agents/workflows/debug.md
 
 ## Agent Output Policy
 

@@ -1,0 +1,4 @@
+- fiajete que compile
+- si no compila fijate en el error
+- arregla el error
+- vuelve a intentar
