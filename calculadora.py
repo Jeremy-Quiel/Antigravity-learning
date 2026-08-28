@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Interactive terminal calculator supporting basic and advanced operations:
-addition, subtraction, multiplication, division, power, and factorial.
+addition, subtraction, multiplication, division, power, factorial, and square root.
 Uses ANSI escape codes for formatted console colors and layout.
 """
 
@@ -34,7 +34,8 @@ def display_menu() -> None:
   print(f"  {GREEN}{BOLD}[4]{RESET} Divide two numbers")
   print(f"  {GREEN}{BOLD}[5]{RESET} Power (base ^ exponent)")
   print(f"  {GREEN}{BOLD}[6]{RESET} Factorial (n!)")
-  print(f"  {RED}{BOLD}[7]{RESET} Exit")
+  print(f"  {GREEN}{BOLD}[7]{RESET} Square root (√x)")
+  print(f"  {RED}{BOLD}[8]{RESET} Exit")
   print(f"{MAGENTA}{'-' * 27}{RESET}")
 
 
@@ -115,6 +116,16 @@ def factorial(n: int) -> int:
   return math.factorial(n)
 
 
+def square_root(x: float) -> float:
+  """Calculate the square root of a non-negative number.
+
+  :raises ValueError: If the input is negative.
+  """
+  if x < 0:
+    raise ValueError("Square root is not defined for negative numbers.")
+  return math.sqrt(x)
+
+
 def format_number(n: float) -> str:
   """Format a float to integer representation if there is no decimal component."""
   if isinstance(n, int) or (isinstance(n, float) and n.is_integer()):
@@ -128,7 +139,7 @@ def main() -> None:
 
   while True:
     display_menu()
-    choice = input(f"{YELLOW}{BOLD}Select an option (1-7): {RESET}").strip()
+    choice = input(f"{YELLOW}{BOLD}Select an option (1-8): {RESET}").strip()
 
     if choice == "1":
       # Addition Operation
@@ -212,13 +223,29 @@ def main() -> None:
       print(f"\n{GREEN}{BOLD}✔ Result:{RESET} {n}! = {GREEN}{BOLD}{result}{RESET}")
 
     elif choice == "7":
+      # Square Root Operation
+      print(f"\n{CYAN}{BOLD}>> OPERATION: SQUARE ROOT{RESET}")
+      while True:
+        num = prompt_number("Enter a non-negative number")
+        if num < 0:
+          print(f"{RED}❌ Error: Square root cannot be calculated for negative numbers.{RESET}")
+        else:
+          break
+
+      result = square_root(num)
+      str_num = format_number(num)
+      str_res = format_number(result)
+
+      print(f"\n{GREEN}{BOLD}✔ Result:{RESET} √{str_num} = {GREEN}{BOLD}{str_res}{RESET}")
+
+    elif choice == "8":
       # Exit
       print(f"\n{CYAN}{BOLD}Thank you for using the calculator! Goodbye.{RESET}\n")
       break
 
     else:
       # Invalid Option
-      print(f"{RED}❌ Unrecognized option. Please choose a number from 1 to 7.{RESET}")
+      print(f"{RED}❌ Unrecognized option. Please choose a number from 1 to 8.{RESET}")
 
 
 if __name__ == "__main__":
