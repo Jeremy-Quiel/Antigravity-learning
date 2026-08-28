@@ -1,42 +1,42 @@
-# Reglas de Idioma y Comunicación
+# Language and Communication Rules
 
-## 1. Propósito
-Establecer las directivas de idioma oficial para garantizar la coherencia, claridad y accesibilidad en toda la comunicación, documentación técnica, comentarios de código y mensajes de control de versiones dentro del proyecto.
+## 1. Purpose
+Establish English as the official language to ensure global consistency, standard code conventions, clear documentation, and maintainability across the repository.
 
-## 2. Alcance
-Aplica a todas las interacciones de los agentes autónomos, redacción de archivos de documentación (`.md`), comentarios y *docstrings* en el código fuente, así como a los mensajes de *commit* en Git.
+## 2. Scope
+Applies to all autonomous agent responses, technical documentation files (`.md`), source code identifiers, comments and docstrings, as well as Git commit messages.
 
-## 3. Reglas Principales
+## 3. Core Rules
 
-| Ámbito | Idioma Requerido | Directiva |
+| Scope | Required Language | Directive |
 | :--- | :--- | :--- |
-| **Respuestas y Comunicación** | Español | Toda interacción, explicación o reporte dirigido al usuario debe ser en español. |
-| **Documentación Técnica** | Español | Manuales, archivos `README.md`, guías y reglas del proyecto deben redactarse en español. |
-| **Comentarios y Docstrings** | Español | Toda explicación lógica interna, descripción de funciones y clases debe documentarse en español. |
-| **Mensajes de Commit** | Español | Los mensajes de Git deben redactarse en español siguiendo el estándar de *Conventional Commits*. |
-| **Nomenclatura de Código** | Español / Inglés técnico | Se permite el uso de términos técnicos estándar de la industria, manteniendo coherencia en cada módulo. |
+| **Agent Responses & Communication** | English | All explanations, reports, answers, and interactions must be written in English by default. |
+| **Technical Documentation** | English | Manuals, `README.md` files, architectural notes, and project rule files must be written in English. |
+| **Code Comments & Docstrings** | English | All inline comments, function/class docstrings, and type annotations must be documented in English. |
+| **Git Commit Messages** | English | All Git commits must be written in English following the *Conventional Commits* specification (e.g., `feat:`, `fix:`, `docs:`, `chore:`). |
+| **Code Nomenclatures & Identifiers** | English | Variable names, function names, classes, constants, and module names must use standard English terminology. |
 
-## 4. Excepciones
-* **Instrucciones Explícitas:** Cuando el usuario solicite de forma expresa un idioma o traducción específica en su consulta.
-* **Términos Técnicos Universales:** Palabras clave de lenguajes de programación, nombres de librerías, comandos de terminal o identificadores de APIs de terceros no deben traducirse literalmente.
+## 4. Exceptions
+* **Explicit User Requests:** When the user explicitly requests another language for a specific output, translation, or task.
+* **Domain-Specific Constants / Data:** Literal text or external dataset values that inherently exist in other languages.
 
-## 5. Ejemplos de Aplicación
+## 5. Examples
 
-### Documentación de Código
+### Code Documentation
 ```python
-def calcular_total(subtotal: float, impuesto: float) -> float:
+def calculate_total(subtotal: float, tax_rate: float) -> float:
+    """Calculate the total amount after applying the tax rate.
+
+    :param subtotal: Base amount before taxes.
+    :param tax_rate: Decimal representation of the tax percentage.
+    :return: Final calculated total.
     """
-    Calcula el monto total aplicando el porcentaje de impuesto correspondiente.
-    
-    :param subtotal: Monto base antes de impuestos.
-    :param impuesto: Tasa o valor del impuesto a aplicar.
-    :return: Total final calculado.
-    """
-    # Sumar el impuesto al subtotal base
-    return subtotal + impuesto
+    # Calculate tax and add to subtotal
+    tax_amount = subtotal * tax_rate
+    return subtotal + tax_amount
 ```
 
-### Mensajes de Commit en Git
-* `feat: agregar funcionalidad de busqueda binaria`
-* `docs: actualizar documentacion en archivo README`
-* `fix: corregir validacion de entrada numerica`
+### Git Commit Messages
+* `feat: add binary search tree implementation`
+* `docs: update README with model specifications`
+* `fix: correct numeric validation in interactive calculator`
