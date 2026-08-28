@@ -11,7 +11,24 @@ Aplica a todos los agentes autónomos, desarrolladores y herramientas automatiza
 - **Sincronización Remota (Push):** Todo *commit* generado debe enviarse (`git push`) de manera inmediata a la rama correspondiente en el repositorio de GitHub.
 - **Atomicidad:** Cada modificación o conjunto de cambios relacionados debe confirmarse y sincronizarse de forma oportuna sin acumular cambios pendientes.
 
-## 4. Flujo de Ejecución Estándar
+## 4. Creación de Ramas
+- **Origen Obligatorio:** Toda nueva rama debe crearse exclusivamente a partir de la rama `main`.
+- **Sincronización Previa:** Antes de crear cualquier rama, verifica que la rama `main` esté completamente actualizada con el remoto (`git pull origin main`).
+- **Árbol Limpio:** Asegúrate de que no existan cambios locales sin commitear antes de iniciar la bifurcación.
+
+```bash
+# 1. Cambiar a main y actualizar con el remoto
+git checkout main
+git pull origin main
+
+# 2. Verificar que no haya cambios pendientes
+git status
+
+# 3. Crear y cambiar a la nueva rama
+git checkout -b <tipo>/<nombre-descriptivo>
+```
+
+## 5. Flujo de Ejecución Estándar
 ```bash
 # 1. Preparar archivos modificados
 git add .
